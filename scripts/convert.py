@@ -162,5 +162,5 @@ def getIncidenza(pdf):
     return csv
 
 
-getIncidenza(getRanges(path+'/download/report-20211201.pdf'))
-getVax(getRanges(path+'/download/report-20211201.pdf'))
+getIncidenza(getRanges(path+'/download/'+latest['nome_file']))
+getVax(getRanges(path+'/download/'+latest['nome_file']))
