@@ -1,0 +1,12 @@
+name: checkVersion
+
+on:
+  workflow_dispatch:
+
+jobs:
+  whatversion:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          python -V
+          java -version
