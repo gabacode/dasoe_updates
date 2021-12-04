@@ -6,7 +6,6 @@ import pandas as pd
 from PyPDF2 import PdfFileReader
 import re
 import requests
-import sys
 
 path = "./download/"
 
@@ -70,17 +69,14 @@ def check(url):
             newfile = parsePDF(link, url)
             report = pd.read_csv(path + "report.csv")
             if newfile not in report.URL.values:
-                print(datetime.now(), "Nuovo PDF!")
+                print("Nuovo PDF!")
                 file = download(newfile)
                 date = getDate(file)
                 report = report.append({"n":len(report)+1, "data_report": date, "nome_file": file.rsplit('/', 1)[-1], "URL": newfile}, ignore_index=True)
                 report.to_csv(path + "report.csv", index=False)
-                sys.exit(0)
             else:
-                print(datetime.now(), "PDF già presente in archivio")
-                sys.exit(1)
+                print("PDF già presente in archivio")
     except Exception as e:
-        print(datetime.now(), e)
-        sys.exit(1)
+        print(e)
 
 check('https://www.regione.sicilia.it')
