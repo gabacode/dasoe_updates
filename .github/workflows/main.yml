@@ -2,7 +2,7 @@ name: pyUpdate
 
 on:
   schedule:
-    - cron: '15 * * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,29 +12,19 @@ jobs:
       
       - name: Git checkout
         uses: actions/checkout@v2
-      
-      - name: Install Python
-        uses: actions/setup-python@v2.3.1
-        with:
-          python-version: 3.8
-      
+        
       - name: Install packages
-        run: pip install wheel requests feedparser beautifulsoup4 pandas PyPDF2
+        run: pip install feedparser beautifulsoup4 pandas PyPDF2 tabula-py
       
       - name: Check for new PDFs
-        run: python ./scripts/check_new.py
-        
-      - name: Setup Java JDK
-        if: success()
-        uses: actions/setup-java@v2.4.0
-        with:
-          distribution: 'zulu'
-          java-version: '8'
-          
-      - name: Install Tabula-Py
-        run: pip install tabula-py
+        id: check_new
+        run: |
+          output=$(python ./scripts/check_new.py)
+          echo "::set-output name=result::$output"
+          echo $(date '+%Y-%m-%d %H:%M:%S') - $output
         
       - name: Convert PDFs to CSV
+        if: ${{steps.check_new.outputs.result == 'Nuovo PDF!'}}
         run: python ./scripts/convert.py
         
       - name: Update Repository
