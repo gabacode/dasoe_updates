@@ -44,7 +44,7 @@ def download(pdf):
     with open(path+filename, 'wb') as f:
         f.write(r.content)
     try: 
-        date = getDate(download+filename)
+        date = getDate(path+filename)
     except:
         try: 
             date = filename.rsplit('/', 1)[-1].replace('%20', '-').rstrip('.pdf').rsplit('-', 3)[1:]
