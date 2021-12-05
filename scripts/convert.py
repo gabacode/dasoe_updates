@@ -3,7 +3,6 @@
 
 import pandas as pd
 from PyPDF2 import PdfFileReader
-import os
 import tabula
 
 path = '.'
@@ -63,7 +62,9 @@ def isDigit(x):
 def getVax(vax):
     # Leggi il PDF  VAX con tabula-py
     print('Leggo tabella Vaccini...attendi...')
-    pdf = tabula.read_pdf(vax['file'], pages=vax['vaccini'], pandas_options={'header': None}, multiple_tables=True, stream=True, silent=True)
+    pages = vax['vaccini']
+    #pages = list(range(vax['vaccini'][0], vax['vaccini'][1]+1))
+    pdf = tabula.read_pdf(vax['file'], pages=pages, pandas_options={'header': None}, multiple_tables=True, stream=True, silent=True)
     print('Ho letto.')
 
     # Unisci in un unico dataframe e bonifica i dati
@@ -88,6 +89,8 @@ def getVax(vax):
     out['%immunizzati'] = out['%immunizzati'].str.replace(',', '.').str.rstrip('%')
     out.insert(0, 'data', date)
 
+    assert (len(out) == 390), "Errore: Sono presenti meno comuni del previsto."
+   
     # Esporta CSV
     print('Esporto CSV...')
     out.to_csv(path+'/dati-csv/vaccini/vaccini-'+date.replace("-", "")+'.csv', index=None, header=True)
@@ -114,7 +117,7 @@ def getIncidenza(pdf):
             text = text.replace('\n', ' ')
             textes.append(text[2::])
     except Exception as e:
-        pass
+        print(e)
 
     out = ' '.join(textes)\
         .rpartition('settimane')[2]\
@@ -151,6 +154,8 @@ def getIncidenza(pdf):
     out = out[['cod_prov', 'pro_com_t', 'provincia', 'comune', 'incidenza', 'casi']].sort_values(by=['provincia', 'comune'])
     out.reset_index(drop=True, inplace=True)
     out.insert(0, 'data', date)
+
+    assert (len(out) == 390), "Errore: Sono presenti meno comuni del previsto."
 
     # Esporta CSV
     print('Esporto CSV...')
