@@ -62,8 +62,7 @@ def isDigit(x):
 def getVax(vax):
     # Leggi il PDF  VAX con tabula-py
     print('Leggo tabella Vaccini...attendi...')
-    pages = vax['vaccini']
-    #pages = list(range(vax['vaccini'][0], vax['vaccini'][1]+1))
+    pages = list(range(vax['vaccini'][0], vax['vaccini'][1]+1))
     pdf = tabula.read_pdf(vax['file'], pages=pages, pandas_options={'header': None}, multiple_tables=True, stream=True, silent=True)
     print('Ho letto.')
 
