@@ -36,7 +36,7 @@ def getDate(file):
 
 def download(pdf):
     '''
-    Scarica il PDF e prepara le pagine da leggere
+    Scarica il PDF e ritorna il suo path relativo
     '''
     filename = pdf.rsplit('/',1)[-1]
     r = requests.get(pdf, stream=True)
@@ -57,8 +57,7 @@ def download(pdf):
 def check(url):
     '''
     Controlla se è uscito un nuovo bollettino
-    Se si, aggiungi l'url del PDF al log.txt
-    e manda una notifica tramite bot telegram
+    Se si, aggiungilo al report.csv
     '''
 
     try:
